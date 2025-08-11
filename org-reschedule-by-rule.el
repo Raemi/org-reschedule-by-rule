@@ -148,8 +148,8 @@ Choose format based on the first existing timestamp or rule:
 3. Else if CRON is 5-field, include time.
 4. Else if SCHEDULED exists, include time if it has HH:MM.
 Otherwise, date only."
-  (let ((fmt-time  "<%Y-%m-%d %a %H:%M>")
-        (fmt-date  "<%Y-%m-%d %a>")
+  (let ((fmt-time  "%Y-%m-%d %a %H:%M")
+        (fmt-date  "%Y-%m-%d %a")
         (time-regexp "[0-9]\\{2\\}:[0-9]\\{2\\}"))
     (cond
      ((and interval (string-match-p "[0-9]+h\\'" interval))

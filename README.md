@@ -99,7 +99,7 @@ Example: anchored to Wednesday every week
 * TODO Team sync
 SCHEDULED: <2025-08-14 Thu>
 :PROPERTIES:
-:RESCHEDULE_ANCHOR: <2025-08-13 Wed>
+:RESCHEDULE_ANCHOR: 2025-08-13 Wed
 :RESCHEDULE_INTERVAL: 1w
 :END:
 ```
@@ -153,7 +153,7 @@ SCHEDULED: <2025-08-03 Sun>
 - **Every 2 days from a specific anchor**
     ```org
     :RESCHEDULE_INTERVAL: 2d
-    :RESCHEDULE_ANCHOR: <2025-08-03 Sun>
+    :RESCHEDULE_ANCHOR: 2025-08-03 Sun
     ```
 
 ---

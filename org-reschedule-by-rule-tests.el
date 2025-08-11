@@ -37,23 +37,23 @@
 
 (ert-deftest test-org-reschedule-by-rule--reschedule-use-time-p ()
   ;; Test when INTERVAL is defined
-  (should (equal (org-reschedule-by-rule--reschedule-use-time-p "2h" nil nil nil) "<%Y-%m-%d %a %H:%M>"))
-  (should (equal (org-reschedule-by-rule--reschedule-use-time-p "2d" nil nil nil) "<%Y-%m-%d %a>"))
+  (should (equal (org-reschedule-by-rule--reschedule-use-time-p "2h" nil nil nil) "%Y-%m-%d %a %H:%M"))
+  (should (equal (org-reschedule-by-rule--reschedule-use-time-p "2d" nil nil nil) "%Y-%m-%d %a"))
 
   ;; Test when ANCHOR exists
-  (should (equal (org-reschedule-by-rule--reschedule-use-time-p nil "2023-10-14 15:30" nil nil) "<%Y-%m-%d %a %H:%M>"))
-  (should (equal (org-reschedule-by-rule--reschedule-use-time-p nil "2023-10-14" nil nil) "<%Y-%m-%d %a>"))
+  (should (equal (org-reschedule-by-rule--reschedule-use-time-p nil "2023-10-14 15:30" nil nil) "%Y-%m-%d %a %H:%M"))
+  (should (equal (org-reschedule-by-rule--reschedule-use-time-p nil "2023-10-14" nil nil) "%Y-%m-%d %a"))
 
   ;; Test when CRON exists
-  (should (equal (org-reschedule-by-rule--reschedule-use-time-p nil nil 5 nil) "<%Y-%m-%d %a %H:%M>"))
-  (should (equal (org-reschedule-by-rule--reschedule-use-time-p nil nil 3 nil) "<%Y-%m-%d %a>"))
+  (should (equal (org-reschedule-by-rule--reschedule-use-time-p nil nil 5 nil) "%Y-%m-%d %a %H:%M"))
+  (should (equal (org-reschedule-by-rule--reschedule-use-time-p nil nil 3 nil) "%Y-%m-%d %a"))
 
   ;; Test when SCHEDULED exists
-  (should (equal (org-reschedule-by-rule--reschedule-use-time-p nil nil nil "2023-10-14 09:00") "<%Y-%m-%d %a %H:%M>"))
-  (should (equal (org-reschedule-by-rule--reschedule-use-time-p nil nil nil "2023-10-14") "<%Y-%m-%d %a>"))
+  (should (equal (org-reschedule-by-rule--reschedule-use-time-p nil nil nil "2023-10-14 09:00") "%Y-%m-%d %a %H:%M"))
+  (should (equal (org-reschedule-by-rule--reschedule-use-time-p nil nil nil "2023-10-14") "%Y-%m-%d %a"))
 
   ;; Test when no criteria match
-  (should (equal (org-reschedule-by-rule--reschedule-use-time-p nil nil nil nil) "<%Y-%m-%d %a>"))
+  (should (equal (org-reschedule-by-rule--reschedule-use-time-p nil nil nil nil) "%Y-%m-%d %a"))
   )
 
 
@@ -78,10 +78,9 @@
     (goto-char (point-min))
     (let ((sched  (org-entry-get (point) "SCHEDULED"))
           (anchor (org-entry-get (point) org-reschedule-by-rule-anchor-prop)))
-      (should (string-match "2025-08-10" sched))
-      (should (string= sched anchor)))
-    (should (string= (org-get-todo-state) "TODO"))))
-
+      (should (string-match "^<2025-08-10 .* 12:00>$" sched))
+      (should (string-match "^2025-08-10 .* 12:00$" anchor))
+      (should (string= (org-get-todo-state) "TODO")))))
 
 
 ;;; --------------------------------------------------------------------------
