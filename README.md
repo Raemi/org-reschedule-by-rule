@@ -108,7 +108,7 @@ Even if moved mid-week, `DONE` will push it to the *next Wednesday*.
 
 ---
 
-### 3. Combining interval + cron
+### 3. Combining interval + cron (advanced usage)
 
 Both rules can be set. The interval advances from the anchor until the cron
 constraint is satisfied.
@@ -154,6 +154,11 @@ SCHEDULED: <2025-08-03 Sun>
     ```org
     :RESCHEDULE_INTERVAL: 2d
     :RESCHEDULE_ANCHOR: 2025-08-03 Sun
+    ```
+
+- **Every first Monday of the quarter**
+    ```org
+    :RESCHEDULE_CRON: * Jan,Apr,Jul,Oct Mon#1
     ```
 
 ---
