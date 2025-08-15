@@ -57,6 +57,14 @@ After cloning the repository, configure it in your Emacs init. For example:
   :after org)
 ```
 
+With straight
+
+```elisp
+  (use-package org-reschedule-by-rule
+    :straight (:host github :repo "Raemi/org-reschedule-by-rule")
+    :after org)
+```
+
 ---
 
 ## Usage
