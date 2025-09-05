@@ -41,6 +41,11 @@ possible dates to reschedule the task."
   :type 'string
   :group 'org-reschedule-by-rule)
 
+(defcustom org-reschedule-by-rule-deadline-prop "RESCHEDULE_DEADLINE"
+  "When 't' , use 'org-deadline', otherwise default to 'org-schedule' "
+  :type 'string
+  :group 'org-reschedule-by-rule)
+
 (defvar org-reschedule-by-rule-python
   (or (executable-find "python3") (executable-find "python"))
   "Path to Python interpreter for croniter (python3 preferred).")
@@ -176,9 +181,15 @@ Otherwise, date only."
       (org-back-to-heading t)
       (let* ((interval-str   (org-entry-get (point) org-reschedule-by-rule-interval-prop nil))
              (cron-str       (org-entry-get (point) org-reschedule-by-rule-cron-prop nil))
+             (deadline-str (org-entry-get (point) org-reschedule-by-rule-deadline-prop nil))
+             (resched-func (if (string= deadline-str "t")
+                                'org-deadline
+                             'org-schedule))
              (has-interval   (and interval-str (> (length (string-trim interval-str)) 0)))
              (has-cron       (and cron-str     (> (length (string-trim cron-str))     0)))
-             (sched-time     (org-get-scheduled-time (point)))
+             (sched-time     (if (string= deadline-str "t")
+                                 (org-get-deadline-time (point))
+                               (org-get-scheduled-time (point))))
              (anchor-str     (org-entry-get (point) org-reschedule-by-rule-anchor-prop nil))
              (anchor-time    (when (and anchor-str (> (length (string-trim anchor-str)) 0))
                                (org-time-string-to-time anchor-str)))
@@ -188,9 +199,11 @@ Otherwise, date only."
              (cron-arity          (when has-cron     (org-reschedule-by-rule--cron-rule-arity trim-cron)))
              (norm-cron      (when cron-arity        (org-reschedule-by-rule--normalize-cron-rule trim-cron)))
              (cron-param     (when cron-arity        norm-cron))
-             (scheduled-str  (org-entry-get (point) "SCHEDULED"))
+             (resched-str  (if (string= deadline-str "t")
+                               (org-entry-get (point) "DEADLINE")
+                               (org-entry-get (point) "SCHEDULED")))
              (fmt            (org-reschedule-by-rule--reschedule-use-time-p
-                              trim-interval anchor-str cron-arity scheduled-str)))
+                              trim-interval anchor-str cron-arity resched-str)))
         (if (not (or has-cron has-interval))
             (message "[resched] no RESCHEDULE_CRON or RESCHEDULE_INTERVAL, skipping")
           (progn
@@ -204,7 +217,7 @@ Otherwise, date only."
             (let* ((now (current-time))
                    (next (org-reschedule-by-rule--next-date-from-cron base now cron-param trim-interval)))
               (when next
-                (org-schedule nil (format-time-string fmt next))
+                (funcall resched-func nil (format-time-string fmt next))
                 (org-entry-put (point) org-reschedule-by-rule-anchor-prop
                                (format-time-string fmt next))
                 (org-todo 'todo)

@@ -61,6 +61,8 @@ After cloning the repository, configure it in your Emacs init. For example:
 
 ## Usage
 
+Tips: you can set `RESCHEDULE_DEADLINE` to `t` ,so that you can reschedule with `DEADLINE` timestamps.
+
 ### 1. Cron-based rescheduling
 Set the `RESCHEDULE_CRON` property to a cron expression.
 
